@@ -1,6 +1,7 @@
 package com.doublea.androidflashcards.ui
 
 import android.arch.lifecycle.LifecycleFragment
+import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
@@ -8,7 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.doublea.androidflashcards.R
 import com.doublea.androidflashcards.extensions.inflate
-import com.doublea.androidflashcards.model.Flashcard
+import com.doublea.androidflashcards.viewmodel.FlashcardViewModel
 import kotlinx.android.synthetic.main.fragment_flashcard_list.*
 
 class FlashcardListFragment : LifecycleFragment() {
@@ -29,7 +30,12 @@ class FlashcardListFragment : LifecycleFragment() {
         }
         if (flashcard_list.adapter == null) {
             flashcard_list.adapter = adapter
-            adapter.dataSource = listOf(Flashcard("Test"), Flashcard("Is this working"), Flashcard("Three (3) items?"))
         }
+        val model = FlashcardViewModel.create(activity)
+        model.getModelData().observe(this, Observer {
+            if (it != null) {
+                adapter.dataSource = it
+            }
+        })
     }
 }
