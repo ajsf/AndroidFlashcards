@@ -14,28 +14,33 @@ import kotlinx.android.synthetic.main.fragment_flashcard_list.*
 
 class FlashcardListFragment : LifecycleFragment() {
 
-    private val adapter = FlashcardAdapter()
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return container?.inflate(R.layout.fragment_flashcard_list)
     }
 
+    lateinit var adapter: FlashcardAdapter
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        val model = FlashcardViewModel.create(activity)
+
         flashcard_list.apply {
             setHasFixedSize(true)
             val linearLayout = LinearLayoutManager(context)
             layoutManager = linearLayout
         }
+
         if (flashcard_list.adapter == null) {
+            adapter = FlashcardAdapter {
+                model.select(it)
+                println(model.selectedFlashcard.value?.question)
+
+            }
             flashcard_list.adapter = adapter
         }
-        val model = FlashcardViewModel.create(activity)
-        model.getModelData().observe(this, Observer {
-            if (it != null) {
-                adapter.dataSource = it
-            }
-        })
+
+        model.getModelData().observe(this, Observer { if (it != null) adapter.dataSource = it })
     }
 }

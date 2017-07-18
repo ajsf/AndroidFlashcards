@@ -7,7 +7,7 @@ import com.doublea.androidflashcards.extensions.inflate
 import com.doublea.androidflashcards.model.Flashcard
 import kotlinx.android.synthetic.main.list_item.view.*
 
-class FlashcardAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class FlashcardAdapter(val listener: (Flashcard) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var dataSource: List<Flashcard> = emptyList()
         set(value) {
@@ -26,8 +26,11 @@ class FlashcardAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemCount() = dataSource.size
 
-    class FlashcardViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(parent.inflate(R.layout.list_item)) {
-        fun bind(flashcard: Flashcard) = with(itemView) { tv_question.text = flashcard.question }
+    inner class FlashcardViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(parent.inflate(R.layout.list_item)) {
+        fun bind(flashcard: Flashcard) = with(itemView) {
+            tv_question.text = flashcard.question
+            setOnClickListener { listener(flashcard)}
+        }
     }
 
 }

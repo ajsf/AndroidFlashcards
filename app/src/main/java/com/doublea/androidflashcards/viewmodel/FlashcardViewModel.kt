@@ -1,24 +1,26 @@
 package com.doublea.androidflashcards.viewmodel
 
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProviders
 import android.support.v4.app.FragmentActivity
 import com.doublea.androidflashcards.model.Flashcard
 import com.doublea.androidflashcards.repository.FlashcardRepository
+import com.doublea.androidflashcards.repository.Repository
 
-class FlashcardViewModel : ViewModel() {
+class FlashcardViewModel(var repository: Repository<Flashcard>) : ViewModel() {
 
-    private var flashcards: MutableLiveData<List<Flashcard>> = MutableLiveData()
-    val selectedFlashcard = MutableLiveData<Flashcard>()
+    constructor() : this(FlashcardRepository())
 
-    private val repository = FlashcardRepository()
+    private var flashcards: LiveData<List<Flashcard>> = MutableLiveData()
+    var selectedFlashcard = MutableLiveData<Flashcard>()
 
-    fun getModelData(): MutableLiveData<List<Flashcard>> {
+    fun getModelData(): LiveData<List<Flashcard>> {
         if (flashcards.value == null) {
             flashcards = repository.loadData() as MutableLiveData<List<Flashcard>>
         }
-            return flashcards
+        return flashcards
     }
 
     fun select(flashcard: Flashcard) {
@@ -26,7 +28,7 @@ class FlashcardViewModel : ViewModel() {
     }
 
     companion object {
-        fun create(activity: FragmentActivity) : FlashcardViewModel {
+        fun create(activity: FragmentActivity): FlashcardViewModel {
             return ViewModelProviders.of(activity).get(FlashcardViewModel::class.java)
         }
     }

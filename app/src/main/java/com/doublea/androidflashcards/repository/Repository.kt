@@ -16,7 +16,7 @@ class FlashcardRepository : Repository<Flashcard> {
 
     private fun getFlashcards(): LiveData<List<Flashcard>> {
         val data = MutableLiveData<List<Flashcard>>()
-        val flashcards = listOf(Flashcard("Test"))
+        val flashcards = listOf(Flashcard("Test"), Flashcard("Does this work?"))
         data.value = flashcards
         return data
     }

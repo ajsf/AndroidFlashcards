@@ -43,6 +43,7 @@ dependencies {
     /* Testing */
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.8.47'
+    testImplementation 'android.arch.core:core-testing:1.0.0-alpha4'
 
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
