@@ -8,4 +8,8 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="edit_flashcard">Edit Flashcard</string>
+    <string name="view_answer">Tap here to view the answer</string>
+    <string name="more_info">For more info, visit the following links</string>
+    <string name="answer_hint">Enter or edit an answer.</string>
 </resources>
