@@ -8,7 +8,9 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import com.doublea.androidflashcards.extensions.launchFragment
 import com.doublea.androidflashcards.ui.FlashcardListFragment
+import com.doublea.androidflashcards.ui.FlashcardQuizFragment
 import kotlinx.android.synthetic.main.activity_flashcard.*
 import kotlinx.android.synthetic.main.app_bar_flashcard.*
 
@@ -27,7 +29,7 @@ class FlashcardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         nav_view.setNavigationItemSelectedListener(this)
 
         if (savedInstanceState == null) {
-            changeFragment(FlashcardListFragment())
+            FlashcardListFragment().launchFragment(supportFragmentManager, addToBackStack = false)
         }
     }
 
@@ -80,12 +82,5 @@ class FlashcardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
-    }
-
-    fun changeFragment(f: Fragment) {
-        val ft = supportFragmentManager.beginTransaction()
-        ft.replace(R.id.fragment_container, f)
-        ft.addToBackStack(null)
-        ft.commit()
     }
 }

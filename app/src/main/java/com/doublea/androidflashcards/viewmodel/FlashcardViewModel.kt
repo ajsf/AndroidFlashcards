@@ -9,12 +9,14 @@ import com.doublea.androidflashcards.model.Flashcard
 import com.doublea.androidflashcards.repository.FlashcardRepository
 import com.doublea.androidflashcards.repository.Repository
 
-class FlashcardViewModel(var repository: Repository<Flashcard>) : ViewModel() {
+open class FlashcardViewModel(var repository: Repository<Flashcard>) : ViewModel() {
 
     constructor() : this(FlashcardRepository())
 
     private var flashcards: LiveData<List<Flashcard>> = MutableLiveData()
     var selectedFlashcard = MutableLiveData<Flashcard>()
+    var showAnswer = MutableLiveData<Boolean>()
+    var editedText: String? = null
 
     fun getModelData(): LiveData<List<Flashcard>> {
         if (flashcards.value == null) {
@@ -25,6 +27,8 @@ class FlashcardViewModel(var repository: Repository<Flashcard>) : ViewModel() {
 
     fun select(flashcard: Flashcard) {
         selectedFlashcard.value = flashcard
+        showAnswer.value = false
+        editedText = null
     }
 
     companion object {
