@@ -9,7 +9,7 @@
     tools:context="com.doublea.androidflashcards.ui.EditFlashcardFragment">
 
     <TextView
-        android:id="@+id/question_tv"
+        android:id="@+id/edit_question_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -31,7 +31,7 @@
         android:paddingTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/question_tv"
+        app:layout_constraintTop_toBottomOf="@+id/edit_question_tv"
         tools:text="What kind of question is that?" />
 
     <Button

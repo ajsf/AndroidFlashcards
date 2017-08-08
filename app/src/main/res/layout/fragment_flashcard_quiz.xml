@@ -26,7 +26,7 @@
             android:src="@drawable/ic_edit_black_24dp" />
 
         <TextView
-            android:id="@+id/question_tv"
+            android:id="@+id/quiz_question_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/action_edit"
@@ -37,12 +37,12 @@
             tools:text="What is the answer to the question?" />
 
         <LinearLayout
+            android:id="@+id/flashcard_answer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/question_tv">
+            android:layout_below="@id/quiz_question_tv">
 
             <include
-                    android:id="@+id/flashcard_answer"
                     layout="@layout/flashcard_answer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
