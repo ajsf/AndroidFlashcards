@@ -26,7 +26,7 @@ class FlashcardQuizFragment : FlashcardBaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         bindViewModel()
-        action_edit.setOnClickListener { EditFlashcardFragment().launchFragment(fragmentManager) }
+        action_edit.setOnClickListener { EditFlashcardFragment().launchFragment(requireFragmentManager()) }
     }
 
     private fun bindViewModel() {
@@ -46,7 +46,7 @@ class FlashcardQuizFragment : FlashcardBaseFragment() {
 
     private fun initUrlList(flashcard: Flashcard) {
         urls = flashcard.links.toTypedArray()
-        val urlAdapter = ArrayAdapter<URL>(activity.baseContext, R.layout.url_list_item, urls)
+        val urlAdapter = ArrayAdapter<URL>(requireContext(), R.layout.url_list_item, urls)
         with(url_list) {
             adapter = urlAdapter
             divider = null

@@ -4,7 +4,6 @@ import android.arch.lifecycle.*
 import android.support.v4.app.FragmentActivity
 import com.doublea.androidflashcards.model.Flashcard
 import com.doublea.androidflashcards.repository.Repository
-import org.jetbrains.anko.doAsync
 
 class FlashcardViewModel : ViewModel() {
 
@@ -27,17 +26,21 @@ class FlashcardViewModel : ViewModel() {
     fun updateSelectedFlashcard(newAnswer: String) {
         val flashcard = selectedFlashcard.value?.copy(answer = newAnswer)
         if (flashcard != null) {
-            doAsync { repository.updateItem(flashcard) }
+            repository.updateItem(flashcard)
             select(flashcard)
         }
     }
 
     companion object {
-        fun create(activity: FragmentActivity, viewModelFactory: ViewModelProvider.Factory? = null): FlashcardViewModel {
+        fun create(
+            activity: FragmentActivity,
+            viewModelFactory: ViewModelProvider.Factory? = null
+        ): FlashcardViewModel {
             if (viewModelFactory == null) {
                 return ViewModelProviders.of(activity).get(FlashcardViewModel::class.java)
             }
-            return ViewModelProviders.of(activity, viewModelFactory).get(FlashcardViewModel::class.java)
+            return ViewModelProviders.of(activity, viewModelFactory)
+                .get(FlashcardViewModel::class.java)
         }
     }
 }

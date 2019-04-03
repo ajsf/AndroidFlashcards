@@ -36,7 +36,7 @@ class FlashcardListFragment : FlashcardBaseFragment() {
         if (flashcard_list.adapter == null) {
             adapter = FlashcardAdapter {
                 viewModel.select(it)
-                FlashcardQuizFragment().launchFragment(fragmentManager)
+                FlashcardQuizFragment().launchFragment(requireFragmentManager())
             }
         }
         flashcard_list.adapter = adapter

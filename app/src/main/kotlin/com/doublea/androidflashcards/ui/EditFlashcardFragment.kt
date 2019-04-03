@@ -9,13 +9,14 @@ import com.doublea.androidflashcards.R
 import com.doublea.androidflashcards.extensions.inflate
 import com.doublea.androidflashcards.model.Flashcard
 import kotlinx.android.synthetic.main.fragment_edit_flashcard.*
+import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.support.v4.toast
 
 class EditFlashcardFragment : FlashcardBaseFragment() {
 
     lateinit var flashcard: Flashcard
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return container?.inflate(R.layout.fragment_edit_flashcard)
     }
@@ -53,7 +54,7 @@ class EditFlashcardFragment : FlashcardBaseFragment() {
     }
 
     private fun updateFlashcard(newAnswer: String) {
-        viewModel.updateSelectedFlashcard(newAnswer)
+        doAsync { viewModel.updateSelectedFlashcard(newAnswer) }
         toast("Flashcard Updated")
     }
 
