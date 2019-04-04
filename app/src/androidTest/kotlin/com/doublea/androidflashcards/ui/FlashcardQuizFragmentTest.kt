@@ -18,13 +18,23 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class FlashcardQuizFragmentTest {
 
-    @Rule @JvmField
+    @Rule
+    @JvmField
     val fragmentTestRule = FlashcardFragmentTestRule(FlashcardQuizFragment::class.java)
 
     @Before
     fun setup() {
-        val vm = ViewModelProviders.of(fragmentTestRule.activity).get(FlashcardViewModel::class.java)
-        fragmentTestRule.activity.runOnUiThread { vm.select(Flashcard("Test", "Answer")) }
+        val vm =
+            ViewModelProviders.of(fragmentTestRule.activity).get(FlashcardViewModel::class.java)
+        fragmentTestRule.activity.runOnUiThread {
+            vm.select(
+                Flashcard(
+                    "Test",
+                    "Answer",
+                    "Category"
+                )
+            )
+        }
     }
 
     @Test

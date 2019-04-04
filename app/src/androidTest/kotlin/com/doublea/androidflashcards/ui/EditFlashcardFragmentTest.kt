@@ -19,14 +19,17 @@ class EditFlashcardFragmentTest {
 
     val question = "Test question"
     val answer = "Test answer"
+    val category = "Test Category"
 
-    @Rule @JvmField
+    @Rule
+    @JvmField
     val fragmentTestRule = FlashcardFragmentTestRule(EditFlashcardFragment::class.java)
 
     @Before
     fun setup() {
-        val vm = ViewModelProviders.of(fragmentTestRule.activity).get(FlashcardViewModel::class.java)
-        fragmentTestRule.activity.runOnUiThread { vm.select(Flashcard(question, answer)) }
+        val vm =
+            ViewModelProviders.of(fragmentTestRule.activity).get(FlashcardViewModel::class.java)
+        fragmentTestRule.activity.runOnUiThread { vm.select(Flashcard(question, answer, category)) }
     }
 
     @Test

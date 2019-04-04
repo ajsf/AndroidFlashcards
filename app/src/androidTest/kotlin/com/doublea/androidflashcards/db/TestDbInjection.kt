@@ -9,10 +9,16 @@ import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
-@Module(includes = arrayOf(AppModule::class)) class InMemoryDbModule {
+@Module(includes = [AppModule::class])
+class InMemoryDbModule {
 
-    @Provides @Singleton
-    fun provideAppDatabase(context: Context): AppDatabase = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java).addCallback(TestDbCallback()).build()
+    @Provides
+    @Singleton
+    fun provideAppDatabase(context: Context): AppDatabase = Room
+        .inMemoryDatabaseBuilder(context, AppDatabase::class.java)
+        .addCallback(TestDbCallback(context)).build()
 }
 
-@Singleton @Component(modules = arrayOf(InMemoryDbModule::class)) interface TestComponent : AppComponent
+@Singleton
+@Component(modules = [InMemoryDbModule::class])
+interface TestComponent : AppComponent

@@ -12,7 +12,7 @@ val defaultLinks = listOf(
         URL("https://stackoverflow.com"))
 
 @Entity
-data class Flashcard(@PrimaryKey val question: String, var answer: String = defaultAnswer) {
+data class Flashcard(@PrimaryKey val question: String, var answer: String = defaultAnswer, val category: String) {
 
     init {
         if (answer == "") answer = defaultAnswer

@@ -13,7 +13,8 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class FlashcardActivityTest {
 
-    @Rule @JvmField
+    @Rule
+    @JvmField
     val activityRule = ActivityTestRule<FlashcardActivity>(FlashcardActivity::class.java)
 
     @Test

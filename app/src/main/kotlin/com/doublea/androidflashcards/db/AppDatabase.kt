@@ -2,28 +2,50 @@ package com.doublea.androidflashcards.db
 
 import android.arch.persistence.db.SupportSQLiteDatabase
 import android.arch.persistence.room.Database
-import android.arch.persistence.room.OnConflictStrategy
+import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
-import android.content.ContentValues
+import android.content.Context
+import com.doublea.androidflashcards.model.Categories
 import com.doublea.androidflashcards.model.Flashcard
+import kotlin.concurrent.thread
 
-@Database(entities = [Flashcard::class], version = 1)
+@Database(entities = [Flashcard::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract val flashcardDao: FlashcardDao
-}
 
-class DbCallback : RoomDatabase.Callback() {
+    companion object {
+        @Volatile
+        private var INSTANCE: AppDatabase? = null
 
-    override fun onCreate(db: SupportSQLiteDatabase) {
-
-        fun insertItem(question: String, answer: String) {
-            val contentValues = ContentValues()
-            contentValues.put("question", question)
-            contentValues.put("answer", answer)
-            db.insert("flashcard", OnConflictStrategy.REPLACE, contentValues)
+        fun getInstance(context: Context): AppDatabase = INSTANCE ?: synchronized(this) {
+            INSTANCE ?: buildDatabase(context).also { INSTANCE = it }
         }
 
-        dataStructureAndAlgorithms.forEach { insertItem(it.key, it.value) }
-        coreJava.forEach { insertItem(it.key, it.value) }
+        private fun buildDatabase(context: Context) = Room.databaseBuilder(
+            context.applicationContext,
+            AppDatabase::class.java, "flashcards.db"
+        ).addCallback(object : Callback() {
+
+            override fun onCreate(db: SupportSQLiteDatabase) {
+                super.onCreate(db)
+                val dao = getInstance(context).flashcardDao
+
+                val items = listOf(dataStructureAndAlgorithms.map {
+                    Flashcard(
+                        it.key,
+                        it.value,
+                        Categories.DATA_STRUCT.toString()
+                    )
+                }, coreJava.map {
+                    Flashcard(
+                        it.key,
+                        it.value,
+                        Categories.JAVA.toString()
+                    )
+                }).flatten()
+
+                thread { dao.insertAll(items) }
+            }
+        }).build()
     }
 }

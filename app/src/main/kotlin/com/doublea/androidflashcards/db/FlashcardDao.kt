@@ -4,10 +4,14 @@ import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
 import com.doublea.androidflashcards.model.Flashcard
 
-@Dao interface FlashcardDao {
+@Dao
+interface FlashcardDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(flashcard: Flashcard)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAll(flashcards: List<Flashcard>)
 
     @Update
     fun update(flashcard: Flashcard)

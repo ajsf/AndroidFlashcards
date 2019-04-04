@@ -15,23 +15,30 @@ import org.junit.runner.RunWith
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
-@RunWith(AndroidJUnit4::class) class DbTest {
+@RunWith(AndroidJUnit4::class)
+class DbTest {
 
-    lateinit var dao: FlashcardDao
-    lateinit var db: AppDatabase
-    lateinit var flashcardLiveData: LiveData<List<Flashcard>>
+    private lateinit var dao: FlashcardDao
+    private lateinit var db: AppDatabase
+    private lateinit var flashcardLiveData: LiveData<List<Flashcard>>
 
-    val flashcard1 = Flashcard("flashcard1", "1 answer")
-    val flashcard2 = Flashcard("flashcard2", "2 answer")
-    val flashcardList = listOf(flashcard1, flashcard2)
+    private val flashcardList = listOf(
+        Flashcard("flashcard1", "1 answer", "Cat1"),
+        Flashcard("flashcard2", "2 answer", "Cat2")
+    )
 
     @Before
     fun createDb() {
         val context = InstrumentationRegistry.getTargetContext()
-        db = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java).build()
+
+        db = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java)
+            .fallbackToDestructiveMigration()
+            .build()
+
         dao = db.flashcardDao
-        dao.insert(flashcard1)
-        dao.insert(flashcard2)
+        dao.insert(flashcardList.first())
+        dao.insert(flashcardList.last())
+
         flashcardLiveData = dao.getFlashcards().blockingObserve()
     }
 
@@ -55,12 +62,11 @@ import java.util.concurrent.TimeUnit
         val flashcards = flashcardLiveData.value ?: emptyList()
         assertThat(flashcards.size, `is`(2))
         assertThat(flashcards[0], `is`(flashcard))
-        assertThat(flashcards[1], `is`(flashcard2))
     }
 
     @Test
     fun updateDoesNotWorkForNewFlashcards() {
-        val flashcard = Flashcard("A new question?", "A new answer")
+        val flashcard = Flashcard("A new question?", "A new answer", "New Cat")
         dao.update(flashcard)
         flashcardLiveData = dao.getFlashcards().blockingObserve()
         assertThat(flashcardLiveData.value, `is`(flashcardList))
@@ -68,7 +74,7 @@ import java.util.concurrent.TimeUnit
 
     @Test
     fun insertWorksForNewFlashcards() {
-        val newFlashcard = Flashcard("A new question?", "A new answer")
+        val newFlashcard = Flashcard("A new question?", "A new answer", "New Cat")
         dao.insert(newFlashcard)
         flashcardLiveData = dao.getFlashcards().blockingObserve()
         val flashcards = flashcardLiveData.value ?: emptyList()
