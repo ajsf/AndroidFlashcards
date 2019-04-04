@@ -48,6 +48,8 @@ class FlashcardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         }
     }
 
+    override fun onSupportNavigateUp(): Boolean = supportFragmentManager.popBackStack().run { true }
+
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)

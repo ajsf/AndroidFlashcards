@@ -19,6 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="4dp"
+            android:paddingBottom="4dp"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
             app:layout_constraintTop_toBottomOf="@id/quiz_question_tv"
             tools:text="You can't handle the truth." />
@@ -27,15 +28,18 @@
             android:id="@+id/more_info_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
             android:text="@string/more_info"
-            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/answer_tv" />
 
-        <ListView
+        <LinearLayout
             android:id="@+id/url_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             app:layout_constraintTop_toBottomOf="@id/more_info_tv" />
 
     </LinearLayout>

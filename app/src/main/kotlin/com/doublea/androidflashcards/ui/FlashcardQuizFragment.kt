@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
+import android.widget.TextView
 import com.doublea.androidflashcards.R
 import com.doublea.androidflashcards.extensions.inflate
 import com.doublea.androidflashcards.extensions.launchFragment
@@ -43,24 +43,24 @@ class FlashcardQuizFragment : FlashcardBaseFragment() {
             }
         })
         action_view_answer.setOnClickListener { viewModel.showAnswer() }
+        action_back.setOnClickListener { fragmentManager?.popBackStack() }
     }
 
     private fun initFlashcardView(flashcard: Flashcard) {
+        val inflater = LayoutInflater.from(context)
+
         with(flashcard) {
             quiz_question_tv.text = question
             answer_tv.text = answer
-            initUrlList(this)
             flashcard_answer.visibility = View.INVISIBLE
-        }
-    }
+            url_list.removeAllViews()
 
-    private fun initUrlList(flashcard: Flashcard) {
-        urls = flashcard.links.toTypedArray()
-        val urlAdapter = ArrayAdapter<URL>(requireContext(), R.layout.url_list_item, urls)
-        with(url_list) {
-            adapter = urlAdapter
-            divider = null
-            dividerHeight = 0
+            urls = flashcard.links.toTypedArray()
+            urls.forEach {
+                val tv = inflater.inflate(R.layout.url_list_item, null) as TextView
+                tv.text = it.toString()
+                url_list.addView(tv)
+            }
         }
     }
 
