@@ -16,7 +16,7 @@ import java.net.URL
 
 class FlashcardQuizFragment : FlashcardBaseFragment() {
 
-    var urls = emptyArray<URL>()
+    private var urls = emptyArray<URL>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {

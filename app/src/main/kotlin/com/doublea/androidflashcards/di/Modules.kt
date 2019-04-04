@@ -26,7 +26,7 @@ import javax.inject.Singleton
 
 }
 
-@Module(includes = arrayOf(AppModule::class)) class DbModule {
+@Module(includes = [AppModule::class]) class DbModule {
 
     @Provides @Singleton
     fun provideAppDatabase(context: Context): AppDatabase = Room.databaseBuilder(context, AppDatabase::class.java, "flashcards.db").addCallback(DbCallback()).build()

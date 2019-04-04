@@ -5,11 +5,11 @@ import com.doublea.androidflashcards.di.AppComponent
 import com.doublea.androidflashcards.di.AppModule
 import com.doublea.androidflashcards.di.DaggerAppComponent
 
-open class MainApplication : Application() {
+class MainApplication : Application() {
 
-    open val component: AppComponent =
-            DaggerAppComponent
-                    .builder()
-                    .appModule(AppModule(this))
-                    .build()
+    val component: AppComponent =
+        DaggerAppComponent
+            .builder()
+            .appModule(AppModule(this))
+            .build()
 }

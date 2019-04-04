@@ -13,11 +13,15 @@ import kotlinx.android.synthetic.main.fragment_flashcard_list.*
 
 class FlashcardListFragment : FlashcardBaseFragment() {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return container?.inflate(R.layout.fragment_flashcard_list)
     }
 
-    lateinit var adapter: FlashcardAdapter
+    private lateinit var adapter: FlashcardAdapter
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -32,7 +36,7 @@ class FlashcardListFragment : FlashcardBaseFragment() {
         viewModel.flashcards.observe(this, Observer { if (it != null) adapter.dataSource = it })
     }
 
-    fun initAdapter() {
+    private fun initAdapter() {
         if (flashcard_list.adapter == null) {
             adapter = FlashcardAdapter {
                 viewModel.select(it)

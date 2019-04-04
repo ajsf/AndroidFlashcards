@@ -11,7 +11,11 @@ fun ViewGroup.inflate(layoutId: Int, attachToRoot: Boolean = false): View {
     return LayoutInflater.from(context).inflate(layoutId, this, attachToRoot)
 }
 
-fun Fragment.launchFragment(fm: FragmentManager, addToBackStack: Boolean = true, tag: String = "TAG") {
+fun Fragment.launchFragment(
+    fm: FragmentManager,
+    addToBackStack: Boolean = true,
+    tag: String = "TAG"
+) {
     val ft = fm.beginTransaction()
     ft.replace(R.id.fragment_container, this, tag)
     if (addToBackStack) {
