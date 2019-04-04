@@ -18,21 +18,31 @@ class FlashcardQuizFragment : FlashcardBaseFragment() {
 
     private var urls = emptyArray<URL>()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return container?.inflate(R.layout.fragment_flashcard_quiz)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         bindViewModel()
-        action_edit.setOnClickListener { EditFlashcardFragment().launchFragment(requireFragmentManager()) }
+        action_edit.setOnClickListener {
+            EditFlashcardFragment().launchFragment(
+                requireFragmentManager()
+            )
+        }
     }
 
     private fun bindViewModel() {
-        viewModel.selectedFlashcard.observe(this, Observer { if (it != null) initFlashcardView(it) })
-        viewModel.showAnswer.observe(this, Observer { if (it == true) showAnswer() else hideAnswer() })
-        action_view_answer.setOnClickListener { viewModel.showAnswer.value = true }
+        viewModel.quizViewStateLiveData.observe(this, Observer {
+            it?.let { viewState ->
+                initFlashcardView(viewState.selectedFlashcard)
+                if (viewState.showAnswer) showAnswer() else hideAnswer()
+            }
+        })
+        action_view_answer.setOnClickListener { viewModel.showAnswer() }
     }
 
     private fun initFlashcardView(flashcard: Flashcard) {

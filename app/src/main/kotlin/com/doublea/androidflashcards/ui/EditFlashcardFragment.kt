@@ -28,9 +28,9 @@ class EditFlashcardFragment : FlashcardBaseFragment() {
     }
 
     private fun bindViewModel() {
-        viewModel.selectedFlashcard.observe(this, Observer {
-            if (it != null) {
-                flashcard = it
+        viewModel.quizViewStateLiveData.observe(this, Observer {
+            if (it?.selectedFlashcard != null) {
+                flashcard = it.selectedFlashcard
                 updateView()
             }
         })

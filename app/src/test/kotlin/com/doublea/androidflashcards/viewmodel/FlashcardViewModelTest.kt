@@ -9,6 +9,7 @@ import com.doublea.androidflashcards.model.Flashcard
 import com.doublea.androidflashcards.repository.Repository
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Rule
@@ -24,17 +25,20 @@ class FlashcardViewModelTest {
     @Mock
     lateinit var mockRepository: Repository<Flashcard>
 
-    lateinit var vm: FlashcardViewModel
-    lateinit var flashcardList: List<Flashcard>
+    private lateinit var vm: FlashcardViewModel
+    private lateinit var flashcardList: List<Flashcard>
 
-    @Rule @JvmField
+    @Rule
+    @JvmField
     val instantExecutorRule = InstantTaskExecutorRule()
 
     @Before
     fun setup() {
         val data = MutableLiveData<List<Flashcard>>()
         data.value = dummyFlashcardList
+
         `when`(mockRepository.loadData()).thenReturn(data)
+
         vm = FlashcardViewModel()
         vm.repository = mockRepository
         flashcardList = vm.flashcards.value!!
@@ -57,18 +61,22 @@ class FlashcardViewModelTest {
     @Test
     fun itCanSelectOneFlashcard() {
         vm.select(flashcardList[0])
-        var question = vm.selectedFlashcard.value?.question
+        var question = vm.quizViewStateLiveData.value?.selectedFlashcard?.question
+
         assertThat(question, `is`(flashcard1.question))
+
         vm.select(flashcardList[1])
-        question = vm.selectedFlashcard.value?.question
+        question = vm.quizViewStateLiveData.value?.selectedFlashcard?.question
+
         assertThat(question, `is`(flashcard2.question))
     }
 
     @Test
     fun whenFlashcardIsSelectedShowAnswerIsSetToFalse() {
-        vm.showAnswer.value = true
         vm.select(flashcardList[0])
-        assertThat(vm.showAnswer.value, `is`(false))
+        vm.showAnswer()
+        vm.select(flashcardList[0])
+        assertFalse(vm.quizViewStateLiveData.value?.showAnswer!!)
     }
 
     @Test

@@ -5,31 +5,44 @@ import android.support.v4.app.FragmentActivity
 import com.doublea.androidflashcards.model.Flashcard
 import com.doublea.androidflashcards.repository.Repository
 
+data class QuizViewState(
+    val selectedFlashcard: Flashcard,
+    val showAnswer: Boolean = false
+)
+
 class FlashcardViewModel : ViewModel() {
+
+    val quizViewStateLiveData: LiveData<QuizViewState>
+        get() = _viewStateLiveData
+
+    private val _viewStateLiveData: MutableLiveData<QuizViewState> = MutableLiveData()
 
     val flashcards: LiveData<List<Flashcard>> by lazy {
         repository.loadData()
     }
 
-    val selectedFlashcard = MutableLiveData<Flashcard>()
-    val showAnswer = MutableLiveData<Boolean>()
     var editedText: String? = null
 
     lateinit var repository: Repository<Flashcard>
 
     fun select(flashcard: Flashcard) {
-        selectedFlashcard.value = flashcard
-        showAnswer.value = false
+        val newViewState = QuizViewState(flashcard)
+        _viewStateLiveData.postValue(newViewState)
         editedText = null
     }
 
-    fun updateSelectedFlashcard(newAnswer: String) {
-        val flashcard = selectedFlashcard.value?.copy(answer = newAnswer)
-        if (flashcard != null) {
-            repository.updateItem(flashcard)
-            select(flashcard)
-        }
+    fun showAnswer() {
+        val newViewState = getViewState().copy(showAnswer = true)
+        _viewStateLiveData.postValue(newViewState)
     }
+
+    fun updateSelectedFlashcard(newAnswer: String) {
+        val newFlashcard = getViewState().selectedFlashcard.copy(answer = newAnswer)
+        repository.updateItem(newFlashcard)
+        select(newFlashcard)
+    }
+
+    private fun getViewState(): QuizViewState = quizViewStateLiveData.value!!
 
     companion object {
         fun create(
