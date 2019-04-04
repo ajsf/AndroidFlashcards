@@ -25,8 +25,8 @@ class FlashcardViewModel : ViewModel() {
 
     lateinit var repository: Repository<Flashcard>
 
-    fun select(flashcard: Flashcard) {
-        val newViewState = QuizViewState(flashcard)
+    fun select(index: Int) {
+        val newViewState = QuizViewState(flashcards.value!![index])
         _viewStateLiveData.postValue(newViewState)
         editedText = null
     }
@@ -39,7 +39,10 @@ class FlashcardViewModel : ViewModel() {
     fun updateSelectedFlashcard(newAnswer: String) {
         val newFlashcard = getViewState().selectedFlashcard.copy(answer = newAnswer)
         repository.updateItem(newFlashcard)
-        select(newFlashcard)
+
+        val newViewState = QuizViewState(newFlashcard)
+        _viewStateLiveData.postValue(newViewState)
+        editedText = null
     }
 
     private fun getViewState(): QuizViewState = quizViewStateLiveData.value!!

@@ -35,14 +35,14 @@ class FlashcardListFragment : FlashcardBaseFragment() {
 
         initAdapter()
         viewModel.flashcards
-            .observe(this, Observer { if (it != null) adapter.dataSource = it })
+            .observe(this, Observer { if (it != null) adapter.setFlashcards(it) })
     }
 
     private fun initAdapter() {
         if (flashcard_list.adapter == null) {
-            adapter = FlashcardAdapter {
-                viewModel.select(it)
-                FlashcardQuizFragment().launchFragment(requireFragmentManager())
+            adapter = FlashcardAdapter { view, index ->
+                viewModel.select(index)
+                FlashcardQuizFragment().launchFragment(requireFragmentManager(), sharedView = view)
             }
         }
         flashcard_list.adapter = adapter
