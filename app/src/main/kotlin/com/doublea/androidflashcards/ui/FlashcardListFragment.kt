@@ -2,6 +2,7 @@ package com.doublea.androidflashcards.ui
 
 import android.arch.lifecycle.Observer
 import android.os.Bundle
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -28,12 +29,13 @@ class FlashcardListFragment : FlashcardBaseFragment() {
 
         flashcard_list.apply {
             setHasFixedSize(true)
-            val linearLayout = LinearLayoutManager(context)
-            layoutManager = linearLayout
+            layoutManager = LinearLayoutManager(context)
+            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         }
 
         initAdapter()
-        viewModel.flashcards.observe(this, Observer { if (it != null) adapter.dataSource = it })
+        viewModel.flashcards
+            .observe(this, Observer { if (it != null) adapter.dataSource = it })
     }
 
     private fun initAdapter() {
