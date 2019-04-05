@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import com.doublea.androidflashcards.extensions.launchFragment
+import com.doublea.androidflashcards.model.Category
 import com.doublea.androidflashcards.model.Flashcard
 import com.doublea.androidflashcards.repository.Repository
 import com.doublea.androidflashcards.ui.FlashcardListFragment
@@ -28,9 +29,18 @@ class FlashcardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
         (application as MainApplication).component.inject(this)
 
-        val vm = FlashcardViewModel.create(this)
-        vm.repository = repository
+        initViewModel()
+        initUi()
 
+        if (savedInstanceState == null) {
+            launchFragment()
+        }
+    }
+
+    private fun initViewModel() = FlashcardViewModel.create(this)
+        .also { it.repository = repository }
+
+    private fun initUi() {
         val toggle = ActionBarDrawerToggle(
             this,
             drawer_layout,
@@ -40,15 +50,14 @@ class FlashcardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         )
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
-
         nav_view.setNavigationItemSelectedListener(this)
-
-        if (savedInstanceState == null) {
-            FlashcardListFragment().launchFragment(supportFragmentManager, addToBackStack = false)
-        }
     }
 
-    override fun onSupportNavigateUp(): Boolean = supportFragmentManager.popBackStack().run { true }
+    private fun launchFragment() = FlashcardListFragment()
+        .launchFragment(supportFragmentManager, addToBackStack = false)
+
+    override fun onSupportNavigateUp(): Boolean = supportFragmentManager
+        .popBackStack().run { true }
 
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
@@ -59,28 +68,44 @@ class FlashcardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.flashcard, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        when (item.itemId) {
-            R.id.action_settings -> return true
-            else -> return super.onOptionsItemSelected(item)
+        return when (item.itemId) {
+            R.id.action_settings -> true
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        // Handle navigation view item clicks here.
-        when (item.itemId) {
-
-        }
-
+        val category = getCategory(item.itemId)
+        scrollToCategory(category)
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
     }
+
+    private fun getCategory(itemId: Int): Category = when (itemId) {
+        R.id.nav_android -> Category.ANDROID
+        R.id.nav_java -> Category.JAVA
+        R.id.nav_algo -> Category.DATA
+        R.id.nav_architecture -> Category.ARCHITECTURE
+        R.id.nav_design -> Category.DESIGN
+        R.id.nav_tools -> Category.TOOLS
+        R.id.nav_test -> Category.TESTING
+        R.id.nav_other -> Category.OTHER
+        else -> Category.ANDROID
+    }
+
+    private fun scrollToCategory(category: Category) {
+        while (getFragment() !is FlashcardListFragment) {
+            popBackStack()
+        }
+        (getFragment() as FlashcardListFragment).scrollToCategory(category)
+    }
+
+    private fun getFragment() = supportFragmentManager.findFragmentById(R.id.fragment_container)
+
+    private fun popBackStack() = supportFragmentManager.popBackStackImmediate()
 }

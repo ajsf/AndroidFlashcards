@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.doublea.androidflashcards.R
 import com.doublea.androidflashcards.extensions.inflate
-import com.doublea.androidflashcards.model.Categories
+import com.doublea.androidflashcards.model.Category
 import com.doublea.androidflashcards.model.Flashcard
 import kotlinx.android.synthetic.main.list_item.view.*
 
@@ -24,17 +24,19 @@ class FlashcardAdapter(val clickListener: (View, Int) -> Unit) :
         }
 
     fun setFlashcards(flashcards: List<Flashcard>) {
-
         dataSource = flashcards
             .groupBy { it.category }
             .map {
-                println("--------------- $it -------------")
-                Categories.valueOf(it.key) to it.value.mapIndexed { index, flashcard ->
+                Category.valueOf(it.key) to it.value.mapIndexed { index, flashcard ->
                     Item(flashcard.question, index)
                 }
+            }.sortedBy {
+                it.first.ordinal
             }
             .flatMap { listOf(Header(it.first.description)) + it.second }
     }
+
+    fun findPositionForCategory(category: String): Int = dataSource.indexOf(Header(category))
 
     override fun getItemViewType(position: Int): Int {
         return when (dataSource[position]) {
@@ -44,7 +46,6 @@ class FlashcardAdapter(val clickListener: (View, Int) -> Unit) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        println("onBindViewHolder")
         return when (viewType) {
             0 -> HeaderViewHolder(parent)
             else -> ItemViewHolder(parent)
@@ -52,7 +53,6 @@ class FlashcardAdapter(val clickListener: (View, Int) -> Unit) :
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        println("onBindViewHolder. position: $position")
         when (holder) {
             is HeaderViewHolder -> {
                 (holder.itemView as TextView).text = (dataSource[position] as Header).category

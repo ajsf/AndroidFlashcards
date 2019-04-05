@@ -1,12 +1,12 @@
 package com.doublea.androidflashcards.model
 
-enum class Categories(val description: String) {
-    DATA_STRUCT("Data Structures And Algorithms"),
-    JAVA("Core Java"),
+enum class Category(val description: String) {
     ANDROID("Core Android"),
+    JAVA("Core Java"),
+    DATA("Data Structures And Algorithms"),
     ARCHITECTURE("Architecture"),
     DESIGN("Design Problems"),
-    TOOLS("Tools And Technologies"),
     TESTING("Testing"),
+    TOOLS("Tools And Technologies"),
     OTHER("Other")
 }

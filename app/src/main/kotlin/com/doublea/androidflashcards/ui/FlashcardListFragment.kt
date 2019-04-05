@@ -4,12 +4,14 @@ import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.LinearSmoothScroller
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.doublea.androidflashcards.R
 import com.doublea.androidflashcards.extensions.inflate
 import com.doublea.androidflashcards.extensions.launchFragment
+import com.doublea.androidflashcards.model.Category
 import kotlinx.android.synthetic.main.fragment_flashcard_list.*
 
 class FlashcardListFragment : FlashcardBaseFragment() {
@@ -23,9 +25,16 @@ class FlashcardListFragment : FlashcardBaseFragment() {
     }
 
     private lateinit var adapter: FlashcardAdapter
+    private lateinit var smoothScroller: LinearSmoothScroller
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        smoothScroller = object : LinearSmoothScroller(context) {
+            override fun getVerticalSnapPreference(): Int {
+                return LinearSmoothScroller.SNAP_TO_START
+            }
+        }
 
         flashcard_list.apply {
             setHasFixedSize(true)
@@ -46,5 +55,11 @@ class FlashcardListFragment : FlashcardBaseFragment() {
             }
         }
         flashcard_list.adapter = adapter
+    }
+
+    fun scrollToCategory(category: Category) {
+        val pos = adapter.findPositionForCategory(category.description)
+        smoothScroller.targetPosition = pos
+        flashcard_list.layoutManager?.startSmoothScroll(smoothScroller)
     }
 }

@@ -5,7 +5,6 @@ import android.arch.persistence.room.Database
 import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
 import android.content.Context
-import com.doublea.androidflashcards.model.Categories
 import com.doublea.androidflashcards.model.Flashcard
 import kotlin.concurrent.thread
 
@@ -30,19 +29,7 @@ abstract class AppDatabase : RoomDatabase() {
                 super.onCreate(db)
                 val dao = getInstance(context).flashcardDao
 
-                val items = listOf(dataStructureAndAlgorithms.map {
-                    Flashcard(
-                        it.key,
-                        it.value,
-                        Categories.DATA_STRUCT.toString()
-                    )
-                }, coreJava.map {
-                    Flashcard(
-                        it.key,
-                        it.value,
-                        Categories.JAVA.toString()
-                    )
-                }).flatten()
+                val items = allFlashcards()
 
                 thread { dao.insertAll(items) }
             }
