@@ -2,7 +2,6 @@ package tech.ajsf.androidflashcards.extensions
 
 import android.os.Build
 import android.support.transition.ChangeBounds
-import android.support.transition.Fade
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.view.LayoutInflater
@@ -21,12 +20,7 @@ fun Fragment.launchFragment(
     sharedView: View? = null
 ) {
 
-    this.sharedElementEnterTransition = ChangeBounds().apply { duration = 800 }
-    this.returnTransition = Fade().apply {
-        duration = 400
-    }
-    this.allowReturnTransitionOverlap = false
-    allowEnterTransitionOverlap = false
+    sharedElementEnterTransition = ChangeBounds().apply { duration = 500 }
 
     val ft = fm.beginTransaction()
     ft.replace(R.id.fragment_container, this, tag)

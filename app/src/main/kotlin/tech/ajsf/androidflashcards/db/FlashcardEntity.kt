@@ -5,5 +5,5 @@ import android.arch.persistence.room.PrimaryKey
 
 @Entity(tableName = "flashcard")
 data class FlashcardEntity(
-    @PrimaryKey val question: String, val answer: String, val category: String
+    @PrimaryKey val id: String, val question: String, val answer: String, val category: String
 )

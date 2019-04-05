@@ -36,19 +36,17 @@ class FlashcardRepository @Inject constructor(private val flashcardDao: Flashcar
                 FirebaseDatabase.getInstance().reference
                     .addListenerForSingleValueEvent(object : ValueEventListener {
                         override fun onDataChange(snapshot: DataSnapshot) {
-                            val fbFlashcards = snapshot.children
-                                .mapNotNull { it.getValue(FirebaseFlashcard::class.java) }
+                            val entities = snapshot.children
+                                .map { it.key!! to it.getValue(FirebaseFlashcard::class.java)!! }
+                                .map { (key, card) ->
+                                    FlashcardEntity(key, card.question, card.answer, card.category)
+                                }
 
                             thread {
-                                flashcardDao.insertAll(fbFlashcards.map {
-                                    FlashcardEntity(
-                                        it.question,
-                                        it.answer,
-                                        it.category
-                                    )
-                                })
+                                flashcardDao.insertAll(entities)
                             }
                         }
+
 
                         override fun onCancelled(error: DatabaseError) {
                             error.toException().printStackTrace()
@@ -57,6 +55,7 @@ class FlashcardRepository @Inject constructor(private val flashcardDao: Flashcar
             } else {
                 liveData.postValue(flashcards.map {
                     Flashcard(
+                        it.id,
                         it.question,
                         it.answer,
                         it.category
@@ -68,6 +67,6 @@ class FlashcardRepository @Inject constructor(private val flashcardDao: Flashcar
     }
 
     override fun updateItem(item: Flashcard) {
-        flashcardDao.update(FlashcardEntity(item.question, item.answer, item.category))
+        flashcardDao.update(FlashcardEntity(item.id, item.question, item.answer, item.category))
     }
 }

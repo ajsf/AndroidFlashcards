@@ -25,8 +25,8 @@ class FlashcardViewModel : ViewModel() {
 
     lateinit var repository: Repository<Flashcard>
 
-    fun select(index: Int) {
-        val newViewState = QuizViewState(flashcards.value!![index])
+    fun select(id: String) {
+        val newViewState = QuizViewState(flashcards.value!!.find { it.id == id }!!)
         _viewStateLiveData.postValue(newViewState)
         editedText = null
     }

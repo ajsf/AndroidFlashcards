@@ -4,17 +4,17 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import kotlinx.android.synthetic.main.list_item.view.*
 import tech.ajsf.androidflashcards.R
 import tech.ajsf.androidflashcards.extensions.inflate
 import tech.ajsf.androidflashcards.model.Category
 import tech.ajsf.androidflashcards.model.Flashcard
-import kotlinx.android.synthetic.main.list_item.view.*
 
 sealed class AdapterItem
 data class Header(val category: String) : AdapterItem()
-data class Item(val question: String, val index: Int) : AdapterItem()
+data class Item(val question: String, val id: String) : AdapterItem()
 
-class FlashcardAdapter(val clickListener: (View, Int) -> Unit) :
+class FlashcardAdapter(val clickListener: (View, String) -> Unit) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var dataSource: List<AdapterItem> = emptyList()
@@ -27,8 +27,8 @@ class FlashcardAdapter(val clickListener: (View, Int) -> Unit) :
         dataSource = flashcards
             .groupBy { it.category }
             .map {
-                Category.valueOf(it.key) to it.value.mapIndexed { index, flashcard ->
-                    Item(flashcard.question, index)
+                Category.valueOf(it.key) to it.value.map { flashcard ->
+                    Item(flashcard.question, flashcard.id)
                 }
             }.sortedBy {
                 it.first.ordinal
@@ -70,7 +70,7 @@ class FlashcardAdapter(val clickListener: (View, Int) -> Unit) :
 
         fun bind(item: Item) = with(itemView) {
             tv_question.text = item.question
-            setOnClickListener { clickListener(this, item.index) }
+            setOnClickListener { clickListener(this, item.id) }
         }
     }
 

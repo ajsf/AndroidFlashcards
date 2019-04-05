@@ -12,6 +12,7 @@ val defaultLinks = listOf(
 )
 
 data class Flashcard(
+    val id: String,
     val question: String,
     var answer: String = defaultAnswer,
     val category: String

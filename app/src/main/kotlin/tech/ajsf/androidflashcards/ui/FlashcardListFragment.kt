@@ -49,8 +49,8 @@ class FlashcardListFragment : FlashcardBaseFragment() {
 
     private fun initAdapter() {
         if (flashcard_list.adapter == null) {
-            adapter = FlashcardAdapter { view, index ->
-                viewModel.select(index)
+            adapter = FlashcardAdapter { view, id ->
+                viewModel.select(id)
                 FlashcardQuizFragment().launchFragment(requireFragmentManager(), sharedView = view)
             }
         }
